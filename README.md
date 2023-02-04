@@ -1,0 +1,40 @@
+## Rapid paraformer
+- 模型出自阿里达摩院[Paraformer语音识别-中文-通用-16k-离线-large-pytorch](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
+- 本分支对模型做了转换，仅采用ONNXRuntime推理引擎
+
+
+#### 使用步骤
+1. 安装环境
+   ```bash
+    pip install -r requirements.txt
+   ```
+2. 下载模型
+   - 由于模型太大，上传到仓库不用下载，提供百度云下载连接：[asr_paraformer.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)
+   - 模型下载之后，放在`rapid_paraformer/models`目录下即可，最终目录结构如下：
+        ```text
+        rapid_paraformer
+        ├── config.yaml
+        ├── __init__.py
+        ├── kaldifeat
+        │   ├── feature.py
+        │   ├── __init__.py
+        │   ├── ivector.py
+        │   ├── LICENSE
+        │   └── README.md
+        ├── models
+        │   ├── am.mvn
+        │   ├── asr_paraformer.onnx  # 放在这里
+        │   └── token_list.pkl
+        ├── rapid_paraformer.py
+        └── utils.py
+        ```
+
+3. 运行demo
+   ```bash
+   python demo.py
+   ```
+4. 查看结果
+   ```text
+   [['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可
+   以快速快速攻能包括像前一段时间啊有些媒体在二三月份的时候']]
+   ```

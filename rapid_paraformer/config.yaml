@@ -20,7 +20,7 @@ WavFrontend:
     filter_length_max: -.inf
 
 Model:
-  model_path: models/asr_paraformer.onnx
+  model_path: models/asr_paraformerv2.onnx
   use_cuda: false
   CUDAExecutionProvider:
       device_id: 0

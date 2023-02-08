@@ -195,7 +195,7 @@ class WavFrontend():
             feats_lens.append(mat.shape[0])
 
         feats_pad = np.array(feats).astype(np.float32)
-        feats_lens = np.array(feats_lens).astype(np.int64)
+        feats_lens = np.array(feats_lens).astype(np.int32)
         return feats_pad, feats_lens
 
     @staticmethod
@@ -214,7 +214,7 @@ class WavFrontend():
             else:
                 # process last LFR frame
                 num_padding = lfr_m - (T - i * lfr_n)
-                frame = (inputs[i * lfr_n:]).view(-1)
+                frame = inputs[i * lfr_n:].reshape(-1)
                 for _ in range(num_padding):
                     frame = np.hstack((frame, inputs[-1]))
 
@@ -320,8 +320,8 @@ class OrtInferSession():
     def get_input_names(self, ):
         return [v.name for v in self.session.get_inputs()]
 
-    def get_output_name(self, output_idx=0):
-        return self.session.get_outputs()[output_idx].name
+    def get_output_names(self,):
+        return [v.name for v in self.session.get_outputs()]
 
     def get_character_list(self, key: str = 'character'):
         return self.meta_dict[key].splitlines()

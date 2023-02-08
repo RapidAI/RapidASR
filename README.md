@@ -23,16 +23,23 @@
         │   └── README.md
         ├── models
         │   ├── am.mvn
-        │   ├── asr_paraformer.onnx  # 放在这里
+        │   ├── asr_paraformerv2.onnx  # 放在这里
         │   └── token_list.pkl
         ├── rapid_paraformer.py
         └── utils.py
         ```
 
 3. 运行demo
-   ```bash
-   python demo.py
-   ```
+    ```python
+    from rapid_paraformer import RapidParaformer
+
+    paraformer = RapidParaformer()
+
+    wav_path = 'test_wavs/example_test.wav'
+    print(wav_path)
+    result = paraformer(str(wav_path))
+    print(result)
+    ```
 4. 查看结果
    ```text
    [['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可

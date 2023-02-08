@@ -9,7 +9,7 @@
     pip install -r requirements.txt
    ```
 2. 下载模型
-   - 由于模型太大（881M），上传到仓库不容易下载，提供百度云下载连接：[asr_paraformer.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)
+   - 由于模型太大（881M），上传到仓库不容易下载，提供百度云下载连接：[asr_paraformerv2.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)
    - 模型下载之后，放在`rapid_paraformer/models`目录下即可，最终目录结构如下：
         ```text
         rapid_paraformer

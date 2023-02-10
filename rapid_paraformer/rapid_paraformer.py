@@ -1,16 +1,18 @@
 # -*- encoding: utf-8 -*-
 # @Author: SWHL
 # @Contact: liekkaskono@163.com
+import traceback
 from pathlib import Path
 from typing import List
 
 import librosa
 import numpy as np
 
-from .utils import (CharTokenizer, Hypothesis, OrtInferSession,
-                    TokenIDConverter, WavFrontend, read_yaml)
+from .utils import (CharTokenizer, Hypothesis, ONNXRuntimeError, OrtInferSession,
+                    TokenIDConverter, WavFrontend, read_yaml, get_logger)
 
 cur_dir = Path(__file__).resolve().parent
+logging = get_logger()
 
 
 class RapidParaformer():
@@ -32,7 +34,11 @@ class RapidParaformer():
 
         speech, _ = self.frontend_asr.forward_fbank(waveform)
         feats, feats_len = self.frontend_asr.forward_lfr_cmvn(speech)
-        am_scores = self.ort_infer(input_content=[feats, feats_len])
+        try:
+            am_scores = self.ort_infer(input_content=[feats, feats_len])
+        except ONNXRuntimeError:
+            logging.error(traceback.format_exc())
+            return []
 
         results = []
         for am_score in am_scores:

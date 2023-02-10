@@ -6,7 +6,7 @@ from rapid_paraformer import RapidParaformer
 
 paraformer = RapidParaformer()
 
-wav_path = 'test_wavs/example_test.wav'
+wav_path = 'test_wavs/1657082555863994221829340016640.wav'
 print(wav_path)
 result = paraformer(str(wav_path))
 print(result)

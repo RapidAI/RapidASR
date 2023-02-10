@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # @Author: SWHL
 # @Contact: liekkaskono@163.com
+import functools
 import logging
 import pickle
 from pathlib import Path
@@ -15,6 +16,8 @@ from typeguard import check_argument_types
 from .kaldifeat import compute_fbank_feats
 
 root_dir = Path(__file__).resolve().parent
+
+logger_initialized = {}
 
 
 class TokenIDConverter():
@@ -280,6 +283,10 @@ class TokenIDConverterError(Exception):
     pass
 
 
+class ONNXRuntimeError(Exception):
+    pass
+
+
 class OrtInferSession():
     def __init__(self, config):
         sess_opt = SessionOptions()
@@ -315,7 +322,10 @@ class OrtInferSession():
     def __call__(self,
                  input_content: List[Union[np.ndarray, np.ndarray]]) -> np.ndarray:
         input_dict = dict(zip(self.get_input_names(), input_content))
-        return self.session.run(None, input_dict)[0]
+        try:
+            return self.session.run(None, input_dict)[0]
+        except Exception as e:
+            raise ONNXRuntimeError('ONNXRuntime inferece failed.') from e
 
     def get_input_names(self, ):
         return [v.name for v in self.session.get_inputs()]
@@ -348,3 +358,47 @@ def read_yaml(yaml_path: Union[str, Path]) -> Dict:
     with open(str(yaml_path), 'rb') as f:
         data = yaml.load(f, Loader=yaml.Loader)
     return data
+
+
+@functools.lru_cache()
+def get_logger(name='xxx',
+               log_file=root_dir.joinpath('error.log')):
+    """Initialize and get a logger by name.
+    If the logger has not been initialized, this method will initialize the
+    logger by adding one or two handlers, otherwise the initialized logger will
+    be directly returned. During initialization, a StreamHandler will always be
+    added. If `log_file` is specified a FileHandler will also be added.
+    Args:
+        name (str): Logger name.
+        log_file (str | None): The log filename. If specified, a FileHandler
+            will be added to the logger.
+        log_level (int): The logger level. Note that only the process of
+            rank 0 is affected, and other processes will set the level to
+            "Error" thus be silent most of the time.
+    Returns:
+        logging.Logger: The expected logger.
+    """
+    logger = logging.getLogger(name)
+    if name in logger_initialized:
+        return logger
+
+    for logger_name in logger_initialized:
+        if name.startswith(logger_name):
+            return logger
+
+    formatter = logging.Formatter(
+        '[%(asctime)s] %(name)s %(levelname)s: %(message)s',
+        datefmt="%Y/%m/%d %H:%M:%S")
+
+    if log_file:
+        log_file_folder = Path(log_file).parent
+        log_file_folder.mkdir(parents=True, exist_ok=True)
+
+        file_handler = logging.FileHandler(log_file, 'a')
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+        logger.setLevel(logging.ERROR)
+
+    logger_initialized[name] = True
+    logger.propagate = False
+    return logger

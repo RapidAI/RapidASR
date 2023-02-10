@@ -1,6 +1,17 @@
 ## Rapid paraformer
+
+<p align="left">
+    <a href=""><img src="https://img.shields.io/badge/Python->=3.7,<=3.10-aff.svg"></a>
+    <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Win%2C%20Mac-pink.svg"></a>
+</p>
+
 - 模型出自阿里达摩院[Paraformer语音识别-中文-通用-16k-离线-large-pytorch](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
-- 本分支对模型做了转换，仅采用ONNXRuntime推理引擎
+- 本仓库仅对模型做了转换，只采用ONNXRuntime推理引擎
+
+
+#### 更新日志
+- 2023-02-10 v2.0.1 update:
+  - 添加对输入音频为噪音或者静音的文件推理结果捕捉
 
 
 #### 使用步骤

@@ -1,5 +1,5 @@
 TokenIDConverter:
-  token_path: models/token_list.pkl
+  token_path: resources/models/token_list.pkl
   unk_symbol: <unk>
 
 CharTokenizer:
@@ -8,7 +8,7 @@ CharTokenizer:
   remove_non_linguistic_symbols: false
 
 WavFrontend:
-  cmvn_file: models/am.mvn
+  cmvn_file: resources/models/am.mvn
   frontend_conf:
     fs: 16000
     window: hamming
@@ -20,10 +20,11 @@ WavFrontend:
     filter_length_max: -.inf
 
 Model:
-  model_path: models/asr_paraformerv2.onnx
+  model_path: resources/models/model.onnx
   use_cuda: false
   CUDAExecutionProvider:
       device_id: 0
       arena_extend_strategy: kNextPowerOfTwo
       cudnn_conv_algo_search: EXHAUSTIVE
       do_copy_in_default_stream: true
+  batch_size: 3

@@ -25,7 +25,7 @@ class TokenIDConverter():
                  unk_symbol: str = "<unk>",):
         check_argument_types()
 
-        self.token_list = self.load_token(root_dir / token_path)
+        self.token_list = self.load_token(token_path)
         self.unk_symbol = unk_symbol
 
     @staticmethod
@@ -148,58 +148,37 @@ class WavFrontend():
         self.filter_length_max = filter_length_max
         self.lfr_m = lfr_m
         self.lfr_n = lfr_n
-        self.cmvn_file = root_dir / cmvn_file
+        self.cmvn_file = cmvn_file
         self.dither = dither
 
-    def forward_fbank(self,
-                      input_content: np.ndarray,
-                      ) -> Tuple[np.ndarray, np.ndarray]:
-        feats, feats_lens = [], []
-        batch_size = input_content.shape[0]
-        input_lengths = np.array([input_content.shape[1]])
-        for i in range(batch_size):
-            waveform_length = input_lengths[i]
-            waveform = input_content[i][:waveform_length]
-            waveform = waveform * (1 << 15)
-            mat = compute_fbank_feats(waveform,
-                                      num_mel_bins=self.n_mels,
-                                      frame_length=self.frame_length,
-                                      frame_shift=self.frame_shift,
-                                      dither=self.dither,
-                                      energy_floor=0.0,
-                                      sample_frequency=self.fs)
-            feats.append(mat)
-            feats_lens.append(mat.shape[0])
+        if self.cmvn_file:
+            self.cmvn = self.load_cmvn()
 
-        feats_pad = np.array(feats).astype(np.float32)
-        feats_lens = np.array(feats_lens).astype(np.int64)
-        return feats_pad, feats_lens
+    def fbank(self,
+              input_content: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        waveform_len = input_content.shape[1]
+        waveform = input_content[0][:waveform_len]
+        waveform = waveform * (1 << 15)
+        mat = compute_fbank_feats(waveform,
+                                  num_mel_bins=self.n_mels,
+                                  frame_length=self.frame_length,
+                                  frame_shift=self.frame_shift,
+                                  dither=self.dither,
+                                  energy_floor=0.0,
+                                  sample_frequency=self.fs)
+        feat = mat.astype(np.float32)
+        feat_len = np.array(mat.shape[0]).astype(np.int32)
+        return feat, feat_len
 
-    def forward_lfr_cmvn(self,
-                         input_content: np.ndarray,
-                         ) -> Tuple[np.ndarray, np.ndarray]:
-        feats, feats_lens = [], []
-        batch_size = input_content.shape[0]
+    def lfr_cmvn(self, feat: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        if self.lfr_m != 1 or self.lfr_n != 1:
+            feat = self.apply_lfr(feat, self.lfr_m, self.lfr_n)
 
         if self.cmvn_file:
-            cmvn = self.load_cmvn()
+            feat = self.apply_cmvn(feat)
 
-        input_lengths = np.array([input_content.shape[1]])
-        for i in range(batch_size):
-            mat = input_content[i, :input_lengths[i], :]
-
-            if self.lfr_m != 1 or self.lfr_n != 1:
-                mat = self.apply_lfr(mat, self.lfr_m, self.lfr_n)
-
-            if self.cmvn_file:
-                mat = self.apply_cmvn(mat, cmvn)
-
-            feats.append(mat)
-            feats_lens.append(mat.shape[0])
-
-        feats_pad = np.array(feats).astype(np.float32)
-        feats_lens = np.array(feats_lens).astype(np.int32)
-        return feats_pad, feats_lens
+        feat_len = np.array(feat.shape[0]).astype(np.int32)
+        return feat, feat_len
 
     @staticmethod
     def apply_lfr(inputs: np.ndarray, lfr_m: int, lfr_n: int) -> np.ndarray:
@@ -225,13 +204,13 @@ class WavFrontend():
         LFR_outputs = np.vstack(LFR_inputs).astype(np.float32)
         return LFR_outputs
 
-    def apply_cmvn(self, inputs: np.ndarray, cmvn: np.ndarray) -> np.ndarray:
+    def apply_cmvn(self, inputs: np.ndarray) -> np.ndarray:
         """
         Apply CMVN with mvn data
         """
         frame, dim = inputs.shape
-        means = np.tile(cmvn[0:1, :dim], (frame, 1))
-        vars = np.tile(cmvn[1:2, :dim], (frame, 1))
+        means = np.tile(self.cmvn[0:1, :dim], (frame, 1))
+        vars = np.tile(self.cmvn[1:2, :dim], (frame, 1))
         inputs = (inputs + means) * vars
         return inputs
 
@@ -306,7 +285,7 @@ class OrtInferSession():
             EP_list = [(cuda_ep, config[cuda_ep])]
         EP_list.append((cpu_ep, cpu_provider_options))
 
-        config['model_path'] = str(root_dir / config['model_path'])
+        config['model_path'] = config['model_path']
         self._verify_model(config['model_path'])
         self.session = InferenceSession(config['model_path'],
                                         sess_options=sess_opt,
@@ -323,7 +302,7 @@ class OrtInferSession():
                  input_content: List[Union[np.ndarray, np.ndarray]]) -> np.ndarray:
         input_dict = dict(zip(self.get_input_names(), input_content))
         try:
-            return self.session.run(None, input_dict)[0]
+            return self.session.run(None, input_dict)
         except Exception as e:
             raise ONNXRuntimeError('ONNXRuntime inferece failed.') from e
 
@@ -361,20 +340,14 @@ def read_yaml(yaml_path: Union[str, Path]) -> Dict:
 
 
 @functools.lru_cache()
-def get_logger(name='xxx',
-               log_file=root_dir.joinpath('error.log')):
+def get_logger(name='rapdi_paraformer'):
     """Initialize and get a logger by name.
     If the logger has not been initialized, this method will initialize the
     logger by adding one or two handlers, otherwise the initialized logger will
     be directly returned. During initialization, a StreamHandler will always be
-    added. If `log_file` is specified a FileHandler will also be added.
+    added.
     Args:
         name (str): Logger name.
-        log_file (str | None): The log filename. If specified, a FileHandler
-            will be added to the logger.
-        log_level (int): The logger level. Note that only the process of
-            rank 0 is affected, and other processes will set the level to
-            "Error" thus be silent most of the time.
     Returns:
         logging.Logger: The expected logger.
     """
@@ -390,15 +363,9 @@ def get_logger(name='xxx',
         '[%(asctime)s] %(name)s %(levelname)s: %(message)s',
         datefmt="%Y/%m/%d %H:%M:%S")
 
-    if log_file:
-        log_file_folder = Path(log_file).parent
-        log_file_folder.mkdir(parents=True, exist_ok=True)
-
-        file_handler = logging.FileHandler(log_file, 'a')
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-        logger.setLevel(logging.ERROR)
-
+    sh = logging.StreamHandler()
+    sh.setFormatter(formatter)
+    logger.addHandler(sh)
     logger_initialized[name] = True
     logger.propagate = False
     return logger

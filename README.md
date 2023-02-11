@@ -10,6 +10,11 @@
 
 
 #### 更新日志
+- 2023-02-11 v2.0.2 update:
+  - 模型和推理代码解耦（`rapid_paraformer`和`resources`）
+  - 支持批量推理（通过`resources/config.yaml`中`batch_size`指定）
+  - 增加多种输入方式（`Union[str, np.ndarray, List[str]]`）
+
 - 2023-02-10 v2.0.1 update:
   - 添加对输入音频为噪音或者静音的文件推理结果捕捉。
 
@@ -20,38 +25,53 @@
     pip install -r requirements.txt
    ```
 2. 下载模型
-   - 由于模型太大（881M），上传到仓库不容易下载，提供百度云下载连接：[asr_paraformerv2.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)
-   - 模型下载之后，放在`rapid_paraformer/models`目录下即可，最终目录结构如下：
+   - 由于模型太大（823.8M），上传到仓库不容易下载，提供百度云下载连接：[asr_paraformerv2.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)（模型MD5: `9ca331381a470bc4458cc6c0b0b165de`）
+   - 模型下载之后，放在`resources/models`目录下即可，最终目录结构如下：
         ```text
-        rapid_paraformer
-        ├── config.yaml
-        ├── __init__.py
-        ├── kaldifeat
-        │   ├── feature.py
+        .
+        ├── demo.py
+        ├── rapid_paraformer
         │   ├── __init__.py
-        │   ├── ivector.py
-        │   ├── LICENSE
-        │   └── README.md
-        ├── models
-        │   ├── am.mvn
-        │   ├── asr_paraformerv2.onnx  # 放在这里
-        │   └── token_list.pkl
-        ├── rapid_paraformer.py
-        └── utils.py
+        │   ├── kaldifeat
+        │   ├── __pycache__
+        │   ├── rapid_paraformer.py
+        │   └── utils.py
+        ├── README.md
+        ├── requirements.txt
+        ├── resources
+        │   ├── config.yaml
+        │   └── models
+        │       ├── am.mvn
+        │       ├── asr_paraformerv2.onnx  # 放在这里
+        │       └── token_list.pkl
+        ├── test_onnx.py
+        ├── tests
+        │   ├── __pycache__
+        │   └── test_infer.py
+        └── test_wavs
+            ├── 0478_00017.wav
+            └── asr_example_zh.wav
         ```
 
 3. 运行demo
     ```python
     from rapid_paraformer import RapidParaformer
 
-    paraformer = RapidParaformer()
 
-    wav_path = 'test_wavs/example_test.wav'
-    result = paraformer(str(wav_path))
+    config_path = 'resources/config.yaml'
+    paraformer = RapidParaformer(config_path)
+
+    # 输入：支持Union[str, np.ndarray, List[str]] 三种方式传入
+    # 输出： List[asr_res]
+    wav_path = [
+        'test_wavs/0478_00017.wav',
+    ]
+
+    result = paraformer(wav_path)
     print(result)
     ```
 4. 查看结果
    ```text
-   [['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可
-   以快速快速攻能包括像前一段时间啊有些媒体在二三月份的时候']]
+   ['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可
+   以快速快速攻能包括像前一段时间啊有些媒体在二三月份的时候']
    ```

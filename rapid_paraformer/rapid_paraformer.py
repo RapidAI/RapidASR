@@ -9,7 +9,8 @@ import librosa
 import numpy as np
 
 from .utils import (CharTokenizer, Hypothesis, ONNXRuntimeError, OrtInferSession,
-                    TokenIDConverter, WavFrontend, read_yaml, get_logger)
+                    TokenIDConverter, WavFrontend, read_yaml, get_logger,
+                    OpenVINOInferSession)
 
 cur_dir = Path(__file__).resolve().parent
 logging = get_logger()
@@ -28,6 +29,7 @@ class RapidParaformer():
             **config['WavFrontend']['frontend_conf']
         )
         self.ort_infer = OrtInferSession(config['Model'])
+        self.vino_infer = OpenVINOInferSession(config['Model'])
 
     def __call__(self, wav_path: str) -> List:
         waveform = librosa.load(wav_path)[0][None, ...]
@@ -35,7 +37,8 @@ class RapidParaformer():
         speech, _ = self.frontend_asr.forward_fbank(waveform)
         feats, feats_len = self.frontend_asr.forward_lfr_cmvn(speech)
         try:
-            am_scores = self.ort_infer(input_content=[feats, feats_len])
+            # am_scores = self.ort_infer(input_content=[feats, feats_len])
+            am_scores = self.vino_infer(input_content=[feats, feats_len])
         except ONNXRuntimeError:
             logging.error(traceback.format_exc())
             return []

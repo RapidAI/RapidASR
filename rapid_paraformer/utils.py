@@ -11,6 +11,7 @@ import numpy as np
 import yaml
 from onnxruntime import (GraphOptimizationLevel, InferenceSession,
                          SessionOptions, get_available_providers, get_device)
+from openvino.runtime import Core
 from typeguard import check_argument_types
 
 from .kaldifeat import compute_fbank_feats
@@ -341,6 +342,29 @@ class OrtInferSession():
         if key in self.meta_dict.keys():
             return True
         return False
+
+    @staticmethod
+    def _verify_model(model_path):
+        model_path = Path(model_path)
+        if not model_path.exists():
+            raise FileNotFoundError(f'{model_path} does not exists.')
+        if not model_path.is_file():
+            raise FileExistsError(f'{model_path} is not a file.')
+
+
+class OpenVINOInferSession():
+    def __init__(self, config):
+        ie = Core()
+
+        config['model_path'] = str(root_dir / config['model_path'])
+        self._verify_model(config['model_path'])
+        model_onnx = ie.read_model(config['model_path'])
+        compile_model = ie.compile_model(model=model_onnx, device_name='CPU')
+        self.session = compile_model.create_infer_request()
+
+    def __call__(self, input_content: np.ndarray) -> np.ndarray:
+        self.session.infer(inputs=[input_content])
+        return self.session.get_output_tensor().data
 
     @staticmethod
     def _verify_model(model_path):

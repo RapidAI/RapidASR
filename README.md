@@ -11,6 +11,10 @@
 
 
 #### 更新日志
+- 2023-02-14 v2.0.3 update:
+  - 修复librosa读取wav文件错误
+  - 修复fbank与torch下fbank提取结果不一致bug
+
 - 2023-02-11 v2.0.2 update:
   - 模型和推理代码解耦（`rapid_paraformer`和`resources`）
   - 支持批量推理（通过`resources/config.yaml`中`batch_size`指定）

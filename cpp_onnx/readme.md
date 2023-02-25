@@ -63,5 +63,8 @@ apt install libopenblas-dev
 # build 
  cmake  -DCMAKE_BUILD_TYPE=release .. -DONNXRUNTIME_DIR=/mnt/c/Users/ma139/RapidASR/cpp_onnx/build/onnxruntime-linux-x64-1.14.0
  make
+ 
+ # then in the subfolder tester of current direcotry, you will see a program, tester
+ 
 
 ````

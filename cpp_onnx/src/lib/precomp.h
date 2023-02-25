@@ -16,6 +16,8 @@
 #include <numeric>
 
 
+#include <cstring>
+
 using namespace std;
 // third part
 

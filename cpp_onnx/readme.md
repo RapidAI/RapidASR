@@ -1,5 +1,5 @@
 
-
+# 快速使用
 
 cmake  --config release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime
 
@@ -9,3 +9,7 @@ cmake  --config release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime
 ├───include
 └───lib
 `
+# 支持平台
+
+## Windows
+## Linux/Unix

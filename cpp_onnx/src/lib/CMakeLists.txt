@@ -36,9 +36,6 @@ else()
     include_directories(${ONNXRUNTIME_DIR}/include)    
 endif()
 
-
-
-message(${ONNXRUNTIME_DIR}\\lib)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(rapidasr PUBLIC onnxruntime ${EXTRA_LIBS})
 

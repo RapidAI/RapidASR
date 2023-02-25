@@ -21,3 +21,4 @@ Windows下已经预置fftw3及openblas库。
 ## 依赖
 - fftw3
 - openblas
+- onnxruntime

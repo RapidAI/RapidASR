@@ -12,7 +12,7 @@ Windows下已经预置fftw3及openblas库。
 `
 ├───include
 
-└───lib
+ └───lib
 `
 ## 支持平台
 

@@ -9,6 +9,10 @@
 - 🎉该项目核心代码已经并入[FunASR](https://github.com/alibaba-damo-academy/FunASR)
 - 本仓库仅对模型做了转换，只采用ONNXRuntime推理引擎
 
+#### 支持语言
+- Python
+- C++/C
+
 
 #### 更新日志
 - 2024-02-25 

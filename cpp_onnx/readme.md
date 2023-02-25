@@ -11,5 +11,5 @@ cmake  --config release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime
 `
 # 支持平台
 
-## Windows
-## Linux/Unix
+- Windows
+- Linux/Unix

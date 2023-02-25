@@ -1,6 +1,6 @@
 #pragma once 
 // system 
-#include "alignedmem.h"
+
 #include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
@@ -27,11 +27,12 @@ using namespace std;
 
 
 // mine
+
 #include "commonfunc.h"
 #include <ComDefine.h>
 #include "predefine_coe.h"
 
-
+#include "alignedmem.h"
 #include "Vocab.h"
 #include "util.h"
 #include "CommonStruct.h"

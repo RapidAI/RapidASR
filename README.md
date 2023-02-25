@@ -9,8 +9,15 @@
 - 🎉该项目核心代码已经并入[FunASR](https://github.com/alibaba-damo-academy/FunASR)
 - 本仓库仅对模型做了转换，只采用ONNXRuntime推理引擎
 
+#### 支持语言
+- Python
+- C++/C
+
 
 #### 更新日志
+- 2024-02-25 
+   - 添加C++版本推理，使用onnxruntime引擎，预/后处理代码来自： https://github.com/chenkui164/FastASR
+
 - 2023-02-14 v2.0.3 update:
   - 修复librosa读取wav文件错误
   - 修复fbank与torch下fbank提取结果不一致bug

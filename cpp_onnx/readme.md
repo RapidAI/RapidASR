@@ -1,5 +1,7 @@
 
-# 快速使用
+## 快速使用
+
+Windows 下下载onnxruntime库，解开到某个位置，指定onnxruntime目录按以下方式：
 
 cmake  --config release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime
 
@@ -9,7 +11,11 @@ cmake  --config release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime
 ├───include
 └───lib
 `
-# 支持平台
+## 支持平台
 
 - Windows
 - Linux/Unix
+
+## 依赖
+- fftw3
+- openblas

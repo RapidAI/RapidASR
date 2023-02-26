@@ -17,7 +17,7 @@ if(WIN32)
             target_link_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/lib/x86)
         endif()
         target_include_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/include ${CMAKE_SOURCE_DIR}/win/include/openblas)
-        include_directories(${ONNXRUNTIME_DIR}\\include)
+        
 
 else()
 

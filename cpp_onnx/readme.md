@@ -5,20 +5,28 @@
 
 ## 快速使用
 
-Windows 下下载onnxruntime库，解开到某个位置，指定onnxruntime目录按以下方式：
-```
+### Windows
+ 
+ 安装Vs2022 打开cpp_onnx目录下的cmake工程，直接 build即可。 本仓库已经准备好所有相关依赖库。
+ 
+### Linux
+See the bottom of this page: Building Guidance
 
-cmake -DCMAKE_BUILD_TYPE=release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime ..
 
-````
-使用  -DONNXRUNTIME_DIR  指向onnxruntime目录，该目录下有include以及lib
-```
-onnxruntime_xxx
-├───include
-└───lib
-```
+
 Windows下已经预置fftw3及openblas库。
 
+
+###  运行程序
+
+tester  /path/to/models/dir /path/to/wave/file
+
+tester /data/models  /data/test.wav
+
+/data/models 需要包括如下两个文件： model.onnx 和vocab.txt
+```
+
+```
 ## 支持平台
 
 - Windows
@@ -70,3 +78,11 @@ apt install libopenblas-dev
  
 
 ````
+
+### the structure of onnxruntime package.
+```
+onnxruntime_xxx
+├───include
+└───lib
+```
+

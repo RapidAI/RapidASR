@@ -43,7 +43,7 @@ class Audio {
     Audio(int data_type, int size);
     ~Audio();
     void disp();
-    void loadwav(const char *filename);
+    bool loadwav(const char *filename);
     int fetch_chunck(float *&dout, int len);
     int fetch(float *&dout, int &len, int &flag);
     void padding();

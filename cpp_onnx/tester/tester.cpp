@@ -20,7 +20,11 @@ int main(int argc, char *argv[])
     }
     struct timeval start, end;
     Audio audio(0);
-    audio.loadwav(argv[2]);
+    if (!audio.loadwav(argv[2]))
+    {
+        printf("cannot load %s\n", argv[2]);
+        return -1;
+    }
     audio.disp();
     gettimeofday(&start, NULL);
     Model *mm = create_model(argv[1], 3);

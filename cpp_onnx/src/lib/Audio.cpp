@@ -112,7 +112,7 @@ void Audio::disp()
            speech_len);
 }
 
-void Audio::loadwav(const char *filename)
+bool Audio::loadwav(const char *filename)
 {
 
     if (speech_buff != NULL) {
@@ -124,6 +124,8 @@ void Audio::loadwav(const char *filename)
 
     FILE *fp;
     fp = fopen(filename, "rb");
+    if (fp == nullptr)
+        return false;
     fseek(fp, 0, SEEK_END);
     uint32_t nFileLen = ftell(fp);
     fseek(fp, 44, SEEK_SET);
@@ -150,6 +152,7 @@ void Audio::loadwav(const char *filename)
 
     AudioFrame *frame = new AudioFrame(speech_len);
     frame_queue.push(frame);
+    return true;
 }
 
 int Audio::fetch_chunck(float *&dout, int len)

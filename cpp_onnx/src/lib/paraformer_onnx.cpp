@@ -162,28 +162,28 @@ string ModelImp::forward(float* din, int len, int flag)
     input_onnx.emplace_back(std::move(onnx_feats));
     input_onnx.emplace_back(std::move(onnx_feats_len));
 
-    //auto output = m_session_encoder->Run(run_option,
-    //    m_strEncInputName.data(),
-    //    input_onnx.data(),
-    //    m_strEncInputName.size(),
-    //    m_strEncOutputName.data(),
-    //    m_strEncOutputName.size()
-    //);
+    string result;
+    try {
+
+        auto outputTensor = m_session->Run(run_option, m_szInputNames.data(), input_onnx.data(), m_szInputNames.size(), m_szOutputNames.data(), m_szOutputNames.size());
+        //assert(outputTensor.size() == 1 && outputTensor[0].IsTensor());
+        std::vector<int64_t> outputShape = outputTensor[0].GetTensorTypeAndShapeInfo().GetShape();
 
 
-    auto outputTensor = m_session->Run(run_option, m_szInputNames.data(), input_onnx.data(), m_szInputNames.size(),  m_szOutputNames.data(), m_szOutputNames.size());
+        int64_t outputCount = std::accumulate(outputShape.begin(), outputShape.end(), 1, std::multiplies<int64_t>());
+        float* floatData = outputTensor[0].GetTensorMutableData<float>();
+        auto encoder_out_lens = outputTensor[1].GetTensorMutableData<int64_t>();
+        //float* floatSize = outputTensor[1].GetTensorMutableData<float>();
+        //std::vector<float> out_data(floatArray, floatArray + outputCount);
 
-    //assert(outputTensor.size() == 1 && outputTensor[0].IsTensor());
-    std::vector<int64_t> outputShape = outputTensor[0].GetTensorTypeAndShapeInfo().GetShape();
+        result = greedy_search(floatData, *encoder_out_lens);
+    }
+    catch (...)
+    {
+        result = "";
+    }
 
 
-    int64_t outputCount = std::accumulate(outputShape.begin(), outputShape.end(), 1, std::multiplies<int64_t>());
-    float* floatData = outputTensor[0].GetTensorMutableData<float>();
-    auto encoder_out_lens = outputTensor[1].GetTensorMutableData<int64_t>();
-    //float* floatSize = outputTensor[1].GetTensorMutableData<float>();
-    //std::vector<float> out_data(floatArray, floatArray + outputCount);
-
-    string result = greedy_search(floatData, *encoder_out_lens);
     if(in)
         delete in;
 

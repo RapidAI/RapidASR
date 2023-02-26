@@ -1,6 +1,6 @@
 #pragma once 
 // system 
-#include "alignedmem.h"
+
 #include <iostream>
 #include <stdint.h>
 #include <stdlib.h>
@@ -16,6 +16,8 @@
 #include <numeric>
 
 
+#include <cstring>
+
 using namespace std;
 // third part
 
@@ -25,15 +27,18 @@ using namespace std;
 
 
 // mine
+
 #include "commonfunc.h"
 #include <ComDefine.h>
 #include "predefine_coe.h"
 
-
+#include <ComDefine.h>
+//#include "alignedmem.h"
 #include "Vocab.h"
 #include "util.h"
 #include "CommonStruct.h"
 #include "FeatureExtract.h"
+#include "FeatureQueue.h"
 #include "SpeechWrap.h"
 #include "Model.h"
 #include "paraformer_onnx.h"

@@ -17,6 +17,7 @@ if(WIN32)
             target_link_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/lib/x86)
         endif()
         target_include_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/include ${CMAKE_SOURCE_DIR}/win/include/openblas)
+        include_directories(${ONNXRUNTIME_DIR}\\include)
 
 else()
 
@@ -32,12 +33,9 @@ else()
 
     target_include_directories(rapidasr PUBLIC ${OPENBLAS_INCLUDE_DIR} ${FFTW3F_INCLUDE_DIR})
     target_link_directories(rapidasr PUBLIC ${OPENBLAS_LIBRARY_DIR} ${FFTW3F_LIBRARY_DIR})
-
+    include_directories(${ONNXRUNTIME_DIR}/include)    
 endif()
 
-include_directories(${ONNXRUNTIME_DIR}\\include)
-
-message(${ONNXRUNTIME_DIR}\\lib)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(rapidasr PUBLIC onnxruntime ${EXTRA_LIBS})
 

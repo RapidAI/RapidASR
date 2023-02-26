@@ -21,9 +21,10 @@ Windows下已经预置fftw3及openblas库。
 
 tester  /path/to/models/dir /path/to/wave/file
 
-tester /data/models  /data/test.wav
+ 例如： tester /data/models  /data/test.wav
 
 /data/models 需要包括如下两个文件： model.onnx 和vocab.txt
+
 ```
 
 ```

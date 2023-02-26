@@ -18,7 +18,7 @@ ModelImp::ModelImp(const char* path, int mode,int nNumThread)
 
 
 
-    sessionOptions.SetInterOpNumThreads(nNumThread);
+    //sessionOptions.SetInterOpNumThreads(nNumThread);
     sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
 #ifdef _WIN32

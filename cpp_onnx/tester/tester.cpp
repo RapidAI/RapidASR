@@ -51,8 +51,11 @@ int main(int argc, char *argv[])
     cout << "\"." << endl;
 
     seconds = (end.tv_sec - start.tv_sec);
-    micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
+    long taking_micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
     printf("Model inference takes %lfs.\n", (double)micros / 1000000);
+
+    printf("Model inference RTF %04lf.\n", (double)taking_micros/micros );
+
     delete mm;
 
     return 0;

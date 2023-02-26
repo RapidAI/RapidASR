@@ -18,6 +18,14 @@ int main(int argc, char *argv[])
         printf("Usage: %s /path/to/model_dir /path/to/wav/file", argv[0]);
         exit(-1);
     }
+
+    Model* mm = create_model(argv[1]);
+    if (!mm)
+    {
+        printf("Cannot load ASR Model from: %s, there must be files model.onnx and vocab.txt", argv[1]);
+        exit(-1);
+    }
+
     struct timeval start, end;
     Audio audio(0);
     if (!audio.loadwav(argv[2]))
@@ -27,7 +35,7 @@ int main(int argc, char *argv[])
     }
     audio.disp();
     gettimeofday(&start, NULL);
-    Model *mm = create_model(argv[1], 3);
+
     gettimeofday(&end, NULL);
     long seconds = (end.tv_sec - start.tv_sec);
     long micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);

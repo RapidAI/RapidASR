@@ -3,20 +3,12 @@
 using namespace std;
 using namespace paraformer;
 
-ModelImp::ModelImp(const char* path, int mode,int nNumThread)
+ModelImp::ModelImp(const char* path,int nNumThread)
 {
     string model_path = pathAppend(path, "model.onnx");
     string vocab_path = pathAppend(path, "vocab.txt");
 
-    fe = new FeatureExtract(mode);
-
-    //p_helper = new ModelParamsHelper(wenet_path.c_str(), 500);
-
-    //encoder = new Encoder(&p_helper->params.encoder);
-    //predictor = new Predictor(&p_helper->params.predictor);
-    //decoder = new Decoder(&p_helper->params.decoder);
-
-
+    fe = new FeatureExtract(3);
 
     //sessionOptions.SetInterOpNumThreads(nNumThread);
     sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
@@ -48,18 +40,15 @@ ModelImp::ModelImp(const char* path, int mode,int nNumThread)
 
 ModelImp::~ModelImp()
 {
-    delete fe;
-    //delete p_helper;
-    //delete encoder;
-    //delete predictor;
-    // 
-    //delete decoder;
+    if(fe)
+        delete fe;
     if (m_session)
     {
         delete m_session;
         m_session = nullptr;
     }
-    delete vocab;
+    if(vocab)
+        delete vocab;
 }
 
 void ModelImp::reset()

@@ -13,5 +13,5 @@ class Model {
     virtual std::string rescoring() = 0;
 };
 
-Model *create_model(const char *path, int mode);
+Model *create_model(const char *path);
 #endif

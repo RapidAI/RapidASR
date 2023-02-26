@@ -5,11 +5,12 @@
 
 ## 快速使用
 
-Windows 下下载onnxruntime库，解开到某个位置，指定onnxruntime目录按以下方式：
-```
-
-cmake -DCMAKE_BUILD_TYPE=release -DONNXRUNTIME_DIR=D:\\thirdpart\\onnxruntime ..
-
+### Windows
+ 
+ 安装Vs2022 打开cpp_onnx目录下的cmake工程，直接 build即可。 本仓库已经准备好所有相关依赖库。
+ 
+### Linux
+See the bottom of this page: Building Guidance
 ````
 使用  -DONNXRUNTIME_DIR  指向onnxruntime目录，该目录下有include以及lib
 ```

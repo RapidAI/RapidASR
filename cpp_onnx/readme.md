@@ -9,12 +9,14 @@
  
  安装Vs2022 打开cpp_onnx目录下的cmake工程，直接 build即可。 本仓库已经准备好所有相关依赖库。
  
+ Windows下已经预置fftw3、onnxruntime及openblas库
+
+
 ### Linux
 See the bottom of this page: Building Guidance
 
 
 
-Windows下已经预置fftw3及openblas库。
 
 
 ###  运行程序

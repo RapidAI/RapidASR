@@ -18,6 +18,9 @@ IF(WIN32)
 	endif()
 ELSE()
 
+
+link_directories(${ONNXRUNTIME_DIR}/lib)
+
 endif()
 
 #option(FASTASR_BUILD_PYTHON_MODULE "build python module, using FastASR in Python" OFF)

@@ -41,3 +41,30 @@ pip install --editable ./
 ```
 python -m funasr.export.export_model 'damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch' "./export" true
 ```
+
+## Building Guidance
+
+```
+git clone https://github.com/RapidAI/RapidASR.git
+cd RapidASR/cpp_onnx/
+mkdir build
+cd build
+# download an appropriate onnxruntime from https://github.com/microsoft/onnxruntime/releases/tag/v1.14.0
+# here we get a copy of onnxruntime for linux 64
+wget https://github.com/microsoft/onnxruntime/releases/download/v1.14.0/onnxruntime-linux-x64-1.14.0.tgz
+#ls 
+# onnxruntime-linux-x64-1.14.0  onnxruntime-linux-x64-1.14.0.tgz
+
+#install fftw3-dev
+apt install libfftw3-dev
+#install openblas
+apt install libopenblas-dev
+
+# build 
+ cmake  -DCMAKE_BUILD_TYPE=release .. -DONNXRUNTIME_DIR=/mnt/c/Users/ma139/RapidASR/cpp_onnx/build/onnxruntime-linux-x64-1.14.0
+ make
+ 
+ # then in the subfolder tester of current direcotry, you will see a program, tester
+ 
+
+````

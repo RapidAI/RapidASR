@@ -11,13 +11,9 @@
  
 ### Linux
 See the bottom of this page: Building Guidance
-````
-使用  -DONNXRUNTIME_DIR  指向onnxruntime目录，该目录下有include以及lib
-```
-onnxruntime_xxx
-├───include
-└───lib
-```
+
+
+
 Windows下已经预置fftw3及openblas库。
 
 ## 支持平台
@@ -71,3 +67,11 @@ apt install libopenblas-dev
  
 
 ````
+
+### the structure of onnxruntime package.
+```
+onnxruntime_xxx
+├───include
+└───lib
+```
+

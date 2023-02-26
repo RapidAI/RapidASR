@@ -82,7 +82,7 @@ apt install libopenblas-dev
 
 ````
 
-### the structure of onnxruntime package.
+### The structure of a qualified onnxruntime package.
 ```
 onnxruntime_xxx
 ├───include

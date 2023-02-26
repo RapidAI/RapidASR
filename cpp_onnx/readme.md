@@ -9,12 +9,14 @@
  
  安装Vs2022 打开cpp_onnx目录下的cmake工程，直接 build即可。 本仓库已经准备好所有相关依赖库。
  
+ Windows下已经预置fftw3、onnxruntime及openblas库
+
+
 ### Linux
 See the bottom of this page: Building Guidance
 
 
 
-Windows下已经预置fftw3及openblas库。
 
 
 ###  运行程序
@@ -53,7 +55,7 @@ pip install --editable ./
 python -m funasr.export.export_model 'damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch' "./export" true
 ```
 
-## Building Guidance
+## Building Guidance for Linux/Unix
 
 ```
 git clone https://github.com/RapidAI/RapidASR.git
@@ -80,7 +82,7 @@ apt install libopenblas-dev
 
 ````
 
-### the structure of onnxruntime package.
+### The structure of a qualified onnxruntime package.
 ```
 onnxruntime_xxx
 ├───include

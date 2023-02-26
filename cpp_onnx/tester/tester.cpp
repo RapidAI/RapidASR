@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     long taking_micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
     printf("Model inference takes %lfs.\n", (double)micros / 1000000);
 
-    printf("Model inference RTF %04lf.\n", (double)taking_micros/micros );
+    printf("Model inference RTF: %04lf.\n", (double)taking_micros/micros );
 
     delete mm;
 

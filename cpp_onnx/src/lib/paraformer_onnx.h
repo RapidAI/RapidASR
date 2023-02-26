@@ -39,7 +39,7 @@ namespace paraformer {
         //string m_strOutputName, m_strOutputNameLen;
 
     public:
-        ModelImp(const char* path, int nNumThread=4);
+        ModelImp(const char* path, int nNumThread=0);
         ~ModelImp();
         void reset();
         string forward_chunk(float* din, int len, int flag);

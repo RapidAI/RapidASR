@@ -10,7 +10,7 @@ ModelImp::ModelImp(const char* path,int nNumThread)
 
     fe = new FeatureExtract(3);
 
-    //sessionOptions.SetInterOpNumThreads(nNumThread);
+    sessionOptions.SetInterOpNumThreads(nNumThread);
     sessionOptions.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
 #ifdef _WIN32

@@ -55,7 +55,7 @@ pip install --editable ./
 python -m funasr.export.export_model 'damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch' "./export" true
 ```
 
-## Building Guidance
+## Building Guidance for Linux/Unix
 
 ```
 git clone https://github.com/RapidAI/RapidASR.git

@@ -13,24 +13,6 @@
 - Python
 - C++/C
 
-
-#### 更新日志
-- 2024-02-25
-   - 添加C++版本推理，使用onnxruntime引擎，预/后处理代码来自： https://github.com/chenkui164/FastASR
-
-- 2023-02-14 v2.0.3 update:
-  - 修复librosa读取wav文件错误
-  - 修复fbank与torch下fbank提取结果不一致bug
-
-- 2023-02-11 v2.0.2 update:
-  - 模型和推理代码解耦（`rapid_paraformer`和`resources`）
-  - 支持批量推理（通过`resources/config.yaml`中`batch_size`指定）
-  - 增加多种输入方式（`Union[str, np.ndarray, List[str]]`）
-
-- 2023-02-10 v2.0.1 update:
-  - 添加对输入音频为噪音或者静音的文件推理结果捕捉。
-
-
 #### 使用步骤
 1. 安装环境
    ```bash
@@ -90,3 +72,19 @@
    ['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可
    以快速快速攻能包括像前一段时间啊有些媒体在二三月份的时候']
    ```
+
+#### 更新日志
+- 2024-02-25
+   - 添加C++版本推理，使用onnxruntime引擎，预/后处理代码来自： https://github.com/chenkui164/FastASR
+
+- 2023-02-14 v2.0.3 update:
+  - 修复librosa读取wav文件错误
+  - 修复fbank与torch下fbank提取结果不一致bug
+
+- 2023-02-11 v2.0.2 update:
+  - 模型和推理代码解耦（`rapid_paraformer`和`resources`）
+  - 支持批量推理（通过`resources/config.yaml`中`batch_size`指定）
+  - 增加多种输入方式（`Union[str, np.ndarray, List[str]]`）
+
+- 2023-02-10 v2.0.1 update:
+  - 添加对输入音频为噪音或者静音的文件推理结果捕捉。

@@ -15,7 +15,7 @@
 
 
 #### 更新日志
-- 2024-02-25 
+- 2024-02-25
    - 添加C++版本推理，使用onnxruntime引擎，预/后处理代码来自： https://github.com/chenkui164/FastASR
 
 - 2023-02-14 v2.0.3 update:
@@ -37,7 +37,10 @@
     pip install -r requirements.txt
    ```
 2. 下载模型
-   - 由于模型太大（823.8M），上传到仓库不容易下载，提供百度云下载连接：[asr_paraformerv2.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)（模型MD5: `9ca331381a470bc4458cc6c0b0b165de`）
+   - 由于模型太大（823.8M），上传到仓库不容易下载，
+        - （推荐）自助转换：基于modescope下的notebook环境，可一键转换，详情戳：[快速体验](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
+            - 打开notebook → Cell中输入`!python -m funasr.export.export_model 'damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch' "./export" true`, 执行即可。
+        - 提供百度云下载连接：[asr_paraformerv2.onnx](https://pan.baidu.com/s/1-nEf2eUpkzlcRqiYEwub2A?pwd=dcr3)（模型MD5: `9ca331381a470bc4458cc6c0b0b165de`）
    - 模型下载之后，放在`resources/models`目录下即可，最终目录结构如下：
         ```text
         .

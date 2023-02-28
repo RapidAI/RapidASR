@@ -123,13 +123,6 @@ string ModelImp::forward(float* din, int len, int flag)
     fe->fetch(in);
     apply_lfr(in);
     apply_cmvn(in);
-    //encoder->forward(in);
-    //Tensor<float> enc_out(in);
-    //predictor->forward(in);
-    //decoder->forward(in, &enc_out);
-
-    //int64_t speech_len = in->size[2];
-    //Ort::Value inputTensor = Ort::Value::CreateTensor<float>(m_memoryInfo, in->buff, in->buff_size, input_shape_.data(), input_shape_.size());
     Ort::RunOptions run_option;
 
     std::array<int64_t, 3> input_shape_{ in->size[0],in->size[2],in->size[3] };
@@ -155,16 +148,13 @@ string ModelImp::forward(float* din, int len, int flag)
     try {
 
         auto outputTensor = m_session->Run(run_option, m_szInputNames.data(), input_onnx.data(), m_szInputNames.size(), m_szOutputNames.data(), m_szOutputNames.size());
-        //assert(outputTensor.size() == 1 && outputTensor[0].IsTensor());
+        
         std::vector<int64_t> outputShape = outputTensor[0].GetTensorTypeAndShapeInfo().GetShape();
 
 
         int64_t outputCount = std::accumulate(outputShape.begin(), outputShape.end(), 1, std::multiplies<int64_t>());
         float* floatData = outputTensor[0].GetTensorMutableData<float>();
         auto encoder_out_lens = outputTensor[1].GetTensorMutableData<int64_t>();
-        //float* floatSize = outputTensor[1].GetTensorMutableData<float>();
-        //std::vector<float> out_data(floatArray, floatArray + outputCount);
-
         result = greedy_search(floatData, *encoder_out_lens);
     }
     catch (...)

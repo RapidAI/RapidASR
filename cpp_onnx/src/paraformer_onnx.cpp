@@ -145,22 +145,12 @@ string ModelImp::forward(float* din, int len, int flag)
     try {
 
         auto outputTensor = m_session->Run(run_option, m_szInputNames.data(), input_onnx.data(), m_szInputNames.size(), m_szOutputNames.data(), m_szOutputNames.size());
-<<<<<<< .mine
-
-=======
-        
->>>>>>> .theirs
         std::vector<int64_t> outputShape = outputTensor[0].GetTensorTypeAndShapeInfo().GetShape();
 
 
         int64_t outputCount = std::accumulate(outputShape.begin(), outputShape.end(), 1, std::multiplies<int64_t>());
         float* floatData = outputTensor[0].GetTensorMutableData<float>();
         auto encoder_out_lens = outputTensor[1].GetTensorMutableData<int64_t>();
-<<<<<<< .mine
-
-=======
-
->>>>>>> .theirs
         result = greedy_search(floatData, *encoder_out_lens);
     }
     catch (...)

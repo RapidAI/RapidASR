@@ -37,7 +37,6 @@ tester  /path/to/models/dir /path/to/wave/file
 
 ## 依赖
 - fftw3
-- openblas
 - onnxruntime
 
 

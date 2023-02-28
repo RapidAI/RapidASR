@@ -5,13 +5,6 @@
 注意：在安装vs2022时，需要安装linux 开发组件以支持cmakelists.txt工程。
 
 
-## Demo
-CPU:  i7-7820HQ @ Windows 11
-
-<div align="center">
-    <img src="images/sample.png" width="80%" height="80%">
-</div>
-
 
 
 ## 准备windows依赖库 （专业用户参考，普通用户无需考虑）

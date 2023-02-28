@@ -3,6 +3,11 @@
 
 本程序中的预处理及后处理代码，来自于：https://github.com/chenkui164/FastASR
 
+
+##  演示
+
+![Windows演示](images/demo.png "Windows ASR")
+
 ## 注意
 本程序只支持 采样率16000hz, 位深16bit的 **单声道** 音频。
 

@@ -10,18 +10,18 @@ add_library(rapidasr ${files})
 
 if(WIN32)
 
-        set(EXTRA_LIBS libfftw3f-3 libopenblas webrtcvad)
+        set(EXTRA_LIBS libfftw3f-3 webrtcvad)
         if(CMAKE_CL_64)
             target_link_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/lib/x64)
         else()
             target_link_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/lib/x86)
         endif()
-        target_include_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/include ${CMAKE_SOURCE_DIR}/win/include/openblas)
+        target_include_directories(rapidasr PUBLIC ${CMAKE_SOURCE_DIR}/win/include )
         
 
 else()
 
-    set(EXTRA_LIBS fftw3f openblas webrtcvad pthread)
+    set(EXTRA_LIBS fftw3f webrtcvad pthread)
     target_include_directories(rapidasr PUBLIC "/usr/local/opt/fftw/include")
     target_link_directories(rapidasr PUBLIC "/usr/local/opt/fftw/lib")
 
@@ -31,8 +31,8 @@ else()
     target_include_directories(rapidasr PUBLIC "/usr/include")
     target_link_directories(rapidasr PUBLIC "/usr/lib64")
 
-    target_include_directories(rapidasr PUBLIC ${OPENBLAS_INCLUDE_DIR} ${FFTW3F_INCLUDE_DIR})
-    target_link_directories(rapidasr PUBLIC ${OPENBLAS_LIBRARY_DIR} ${FFTW3F_LIBRARY_DIR})
+    target_include_directories(rapidasr PUBLIC  ${FFTW3F_INCLUDE_DIR})
+    target_link_directories(rapidasr PUBLIC ${FFTW3F_LIBRARY_DIR})
     include_directories(${ONNXRUNTIME_DIR}/include)    
 endif()
 

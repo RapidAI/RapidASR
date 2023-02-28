@@ -35,6 +35,7 @@ using namespace std;
 #include <ComDefine.h>
 //#include "alignedmem.h"
 #include "Vocab.h"
+#include "Tensor.h"
 #include "util.h"
 #include "CommonStruct.h"
 #include "FeatureExtract.h"

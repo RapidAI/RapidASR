@@ -2,8 +2,6 @@
 
 #ifndef UTIL_H
 #define UTIL_H
-#include "Tensor.h"
-#include <iostream>
 
 using namespace std;
 

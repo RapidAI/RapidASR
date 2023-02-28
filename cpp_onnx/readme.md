@@ -42,7 +42,7 @@ tester  /path/to/models/dir /path/to/wave/file
 
 
 ## 导出onnx格式模型文件
-安装 modelscope与FunASR，依赖：torch，torchaudio，安装[详细参考文档]([安装文档](https://github.com/alibaba-damo-academy/FunASR/wiki))
+安装 modelscope与FunASR，依赖：torch，torchaudio，安装过程[详细参考文档](https://github.com/alibaba-damo-academy/FunASR/wiki)
 ```shell
 pip install "modelscope[audio_asr]" -f https://modelscope.oss-cn-beijing.aliyuncs.com/releases/repo.html
 git clone https://github.com/alibaba/FunASR.git && cd FunASR

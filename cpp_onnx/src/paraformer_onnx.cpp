@@ -61,10 +61,9 @@ void ModelImp::apply_lfr(Tensor<float>*& din)
     int mm = din->size[2];
     int ll = ceil(mm / 6.0);
     Tensor<float>* tmp = new Tensor<float>(ll, 560);
-    int i, j;
     int out_offset = 0;
-    for (i = 0; i < ll; i++) {
-        for (j = 0; j < 7; j++) {
+    for (int i = 0; i < ll; i++) {
+        for (int j = 0; j < 7; j++) {
             int idx = i * 6 + j - 3;
             if (idx < 0) {
                 idx = 0;
@@ -91,9 +90,8 @@ void ModelImp::apply_cmvn(Tensor<float>* din)
 
     var = (const float*)paraformer_cmvn_var_hex;
     mean = (const float*)paraformer_cmvn_mean_hex;
-    int i, j;
-    for (i = 0; i < m; i++) {
-        for (j = 0; j < n; j++) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
             int idx = i * n + j;
             din->buff[idx] = (din->buff[idx] + mean[j]) * var[j];
         }
@@ -104,8 +102,7 @@ string ModelImp::greedy_search(float * in, int nLen )
 {
     vector<int> hyps;
     int Tmax = nLen;
-    int i;
-    for (i = 0; i < Tmax; i++) {
+    for (int i = 0; i < Tmax; i++) {
         int max_idx;
         float max_val;
         findmax(in + i * 8404, 8404, max_val, max_idx);
@@ -123,13 +120,6 @@ string ModelImp::forward(float* din, int len, int flag)
     fe->fetch(in);
     apply_lfr(in);
     apply_cmvn(in);
-    //encoder->forward(in);
-    //Tensor<float> enc_out(in);
-    //predictor->forward(in);
-    //decoder->forward(in, &enc_out);
-
-    //int64_t speech_len = in->size[2];
-    //Ort::Value inputTensor = Ort::Value::CreateTensor<float>(m_memoryInfo, in->buff, in->buff_size, input_shape_.data(), input_shape_.size());
     Ort::RunOptions run_option;
 
     std::array<int64_t, 3> input_shape_{ in->size[0],in->size[2],in->size[3] };
@@ -155,15 +145,12 @@ string ModelImp::forward(float* din, int len, int flag)
     try {
 
         auto outputTensor = m_session->Run(run_option, m_szInputNames.data(), input_onnx.data(), m_szInputNames.size(), m_szOutputNames.data(), m_szOutputNames.size());
-        //assert(outputTensor.size() == 1 && outputTensor[0].IsTensor());
         std::vector<int64_t> outputShape = outputTensor[0].GetTensorTypeAndShapeInfo().GetShape();
 
 
         int64_t outputCount = std::accumulate(outputShape.begin(), outputShape.end(), 1, std::multiplies<int64_t>());
         float* floatData = outputTensor[0].GetTensorMutableData<float>();
         auto encoder_out_lens = outputTensor[1].GetTensorMutableData<int64_t>();
-        //float* floatSize = outputTensor[1].GetTensorMutableData<float>();
-        //std::vector<float> out_data(floatArray, floatArray + outputCount);
 
         result = greedy_search(floatData, *encoder_out_lens);
     }

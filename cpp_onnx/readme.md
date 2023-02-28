@@ -1,7 +1,7 @@
 
 
 ## 注意
-本程序只支持 采样率16000hz, 位深16bit的 **单通道** 音频。
+本程序只支持 采样率16000hz, 位深16bit的 **单声道** 音频。
 
 ## 快速使用
 
@@ -42,9 +42,8 @@ tester  /path/to/models/dir /path/to/wave/file
 
 
 ## 导出onnx格式模型文件
-安装 modelscope与FunASR，[安装文档](https://github.com/alibaba-damo-academy/FunASR/wiki)
+安装 modelscope与FunASR，依赖：torch，torchaudio，安装过程[详细参考文档](https://github.com/alibaba-damo-academy/FunASR/wiki)
 ```shell
-pip config set global.index-url https://mirror.sjtu.edu.cn/pypi/web/simple #推荐使用上交pip源
 pip install "modelscope[audio_asr]" -f https://modelscope.oss-cn-beijing.aliyuncs.com/releases/repo.html
 git clone https://github.com/alibaba/FunASR.git && cd FunASR
 pip install --editable ./

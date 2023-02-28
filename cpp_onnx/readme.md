@@ -37,7 +37,6 @@ tester  /path/to/models/dir /path/to/wave/file
 
 ## 依赖
 - fftw3
-- openblas
 - onnxruntime
 
 
@@ -69,8 +68,6 @@ wget https://github.com/microsoft/onnxruntime/releases/download/v1.14.0/onnxrunt
 
 #install fftw3-dev
 apt install libfftw3-dev
-#install openblas
-apt install libopenblas-dev
 
 # build 
  cmake  -DCMAKE_BUILD_TYPE=release .. -DONNXRUNTIME_DIR=/mnt/c/Users/ma139/RapidASR/cpp_onnx/build/onnxruntime-linux-x64-1.14.0

@@ -6,7 +6,7 @@
 
 ## 线程数与性能关系
 
-测试环境Rocky Linux 8，仅测试cpp版本结果（未测python版本）
+测试环境Rocky Linux 8，仅测试cpp版本结果（未测python版本），@acely 
 
 简述：
 在3台配置不同的机器上分别编译并测试，在fftw和onnxruntime版本都相同的前提下，识别同一个30分钟的音频文件，分别测试不同onnx线程数量的表现。

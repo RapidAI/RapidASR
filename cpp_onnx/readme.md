@@ -35,17 +35,14 @@
 ## 快速使用
 
 ### Windows
- 
+
  安装Vs2022 打开cpp_onnx目录下的cmake工程，直接 build即可。 本仓库已经准备好所有相关依赖库。
- 
+
  Windows下已经预置fftw3、onnxruntime及openblas库
 
 
 ### Linux
 See the bottom of this page: Building Guidance
-
-
-
 
 
 ###  运行程序
@@ -56,18 +53,14 @@ tester  /path/to/models/dir /path/to/wave/file
 
 /data/models 需要包括如下两个文件： model.onnx 和vocab.txt
 
-```
 
-```
 ## 支持平台
-
 - Windows
 - Linux/Unix
 
 ## 依赖
 - fftw3
 - onnxruntime
-
 
 ## 导出onnx格式模型文件
 安装 modelscope与FunASR，依赖：torch，torchaudio，安装过程[详细参考文档](https://github.com/alibaba-damo-academy/FunASR/wiki)
@@ -92,18 +85,17 @@ cd build
 # download an appropriate onnxruntime from https://github.com/microsoft/onnxruntime/releases/tag/v1.14.0
 # here we get a copy of onnxruntime for linux 64
 wget https://github.com/microsoft/onnxruntime/releases/download/v1.14.0/onnxruntime-linux-x64-1.14.0.tgz
-#ls 
+# ls
 # onnxruntime-linux-x64-1.14.0  onnxruntime-linux-x64-1.14.0.tgz
 
 #install fftw3-dev
 apt install libfftw3-dev
 
-# build 
+# build
  cmake  -DCMAKE_BUILD_TYPE=release .. -DONNXRUNTIME_DIR=/mnt/c/Users/ma139/RapidASR/cpp_onnx/build/onnxruntime-linux-x64-1.14.0
  make
- 
+
  # then in the subfolder tester of current direcotry, you will see a program, tester
- 
 
 ````
 
@@ -113,4 +105,3 @@ onnxruntime_xxx
 ├───include
 └───lib
 ```
-

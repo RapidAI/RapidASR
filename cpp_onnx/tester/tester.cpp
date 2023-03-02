@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     }
     struct timeval start, end;
     gettimeofday(&start, NULL);
-    int nThreadNum = 8;
+    int nThreadNum = 4;
     Model* mm = create_model(argv[1], nThreadNum);
     if (!mm)
     {

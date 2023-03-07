@@ -15,8 +15,9 @@
 #include <math.h>
 #include <numeric>
 
-
 #include <cstring>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 using namespace std;
 // third part

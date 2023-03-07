@@ -43,3 +43,11 @@ inline void getOutputName(Ort::Session* session, string& outputName, int nIndex 
         }
     }
 }
+
+
+
+inline bool FileIsExist(const string & name) 
+{
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
+}

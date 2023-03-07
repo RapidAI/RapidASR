@@ -12,12 +12,6 @@ extern "C" {
 	_RAPIDASRAPI RPASR_HANDLE  RapidAsrInit(const char* szModelDir, int nThreadNum)
 	{
 
-#ifdef NDEBUG
-		QMLIC_BOOL bMatched = QmLicCheckValid(QLFM_ASR);
-		if (!bMatched) {
-			return nullptr;
-		}
-#endif
 
 		Model* mm = create_model(szModelDir, nThreadNum); 
 

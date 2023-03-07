@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
         cout <<("no return data!");
     }
   
+    printf("Audio length %lfs.\n", (double)snippet_time);
+
     seconds = (end.tv_sec - start.tv_sec);
     long taking_micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
     printf("Model inference takes %lfs.\n", (double)taking_micros / 1000000);

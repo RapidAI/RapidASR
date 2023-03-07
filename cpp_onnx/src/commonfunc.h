@@ -1,6 +1,17 @@
 #pragma once 
+
+
+typedef struct
+{
+    std::string msg;
+
+}RPASR_RECOG_RESULT;
+
+
 #ifdef _WIN32
 #include <codecvt>
+
+
 
 inline std::wstring string2wstring(const std::string& str, const std::string& locale)
 {
@@ -42,12 +53,4 @@ inline void getOutputName(Ort::Session* session, string& outputName, int nIndex 
 
         }
     }
-}
-
-
-
-inline bool FileIsExist(const string & name) 
-{
-    struct stat buffer;
-    return (stat(name.c_str(), &buffer) == 0);
 }

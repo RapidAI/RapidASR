@@ -15,9 +15,8 @@
 #include <math.h>
 #include <numeric>
 
+
 #include <cstring>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 using namespace std;
 // third part
@@ -42,9 +41,10 @@ using namespace std;
 #include "FeatureExtract.h"
 #include "FeatureQueue.h"
 #include "SpeechWrap.h"
+#include <Audio.h>
 #include "Model.h"
 #include "paraformer_onnx.h"
-
+#include "librapidasrapi.h"
 
 
 using namespace paraformer;

@@ -1,5 +1,7 @@
 
 
+参考代码： [tester.cpp](tester/tester.cpp)
+
 ```
 初始化程序库
 _RAPIDASRAPI RPASR_HANDLE  RapidAsrInit(const char* szModelDir, int nThread);

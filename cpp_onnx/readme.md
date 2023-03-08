@@ -26,7 +26,7 @@
 
 
 ## API
-![API文档](api.md)
+[API文档](api.md)
 
 ##  演示
 

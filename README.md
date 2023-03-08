@@ -1,5 +1,5 @@
 ## Rapid ASR
-### 商用级水平的开源ASR程序库，开箱即用，全平台支持。
+### 商用级水平的开源语音识别程序库，开箱即用，全平台支持，中英文混合识别。
 
 <p align="left">
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Win%2C%20Mac-pink.svg"></a>

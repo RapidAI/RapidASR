@@ -25,6 +25,9 @@
 
 
 
+## API
+![API文档](api.md)
+
 ##  演示
 
 ![Windows演示](images/demo.png "Windows ASR")

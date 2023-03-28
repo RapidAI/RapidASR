@@ -300,12 +300,12 @@ class OrtInferSession():
                           RuntimeWarning)
 
     def __call__(self,
-                 input_content: List[Union[np.ndarray, np.ndarray]]) -> np.ndarray:
+                 input_content: List[np.ndarray]) -> np.ndarray:
         input_dict = dict(zip(self.get_input_names(), input_content))
         try:
             return self.session.run(None, input_dict)
         except Exception as e:
-            raise ONNXRuntimeError('ONNXRuntime inferece failed.') from e
+            raise ONNXRuntimeError('ONNXRuntime inference failed.') from e
 
     def get_input_names(self, ):
         return [v.name for v in self.session.get_inputs()]

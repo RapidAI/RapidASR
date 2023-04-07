@@ -1,0 +1,11 @@
+onnxruntime>=1.9.0
+python_speech_features>=0.6
+scipy
+yacs
+numpy
+kaldiio
+jsonlines
+SoundFile
+paddlespeech_ctcdecoders==0.2.0
+sentencepiece
+resampy

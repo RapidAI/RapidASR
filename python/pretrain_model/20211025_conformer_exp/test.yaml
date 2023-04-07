@@ -1,0 +1,16 @@
+dataset_conf:
+  fbank_conf:
+    dither: 0.0
+    frame_length: 25
+    frame_shift: 10
+    num_mel_bins: 80
+  filter_conf:
+    max_length: 102400
+    min_length: 0
+    token_max_length: 102400
+    token_min_length: 0
+    max_output_input_ratio: 102400
+    min_output_input_ratio: 0
+  resample_conf:
+    resample_rate: 16000
+  reverse_weight: 0.0

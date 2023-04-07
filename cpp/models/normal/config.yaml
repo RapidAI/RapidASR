@@ -1,0 +1,4 @@
+beam_size: 10
+ctc_weight: -1.0
+fp16: true
+reverse_weight: -1.0

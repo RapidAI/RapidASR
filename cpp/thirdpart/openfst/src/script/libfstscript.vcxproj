@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+        Need ConfigurationType set before importing openfst.props!
+   -->
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{111F46ED-DA1F-469B-B912-BA2ACC2FF8E6}</ProjectGuid>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WindowsTargetPlatformVersion>$(_Win10SDKVer)</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <Import Project="../openfst.props" />
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <ItemGroup>
+    <ClCompile Include="*.cc" />
+    <ClInclude Include="..\include\fst\script\*.h" />
+  </ItemGroup>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <Import Project="../openfst.targets" />
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</Project>

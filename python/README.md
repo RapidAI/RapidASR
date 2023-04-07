@@ -58,7 +58,7 @@
 - 原始的Wenet模型下载路径：[20211025_conformer_exp](https://wenet-1256283475.cos.ap-shanghai.myqcloud.com/models/aishell/20211025_conformer_exp.tar.gz)
 - 训练该模型使用的配置为：[train_conformer.yaml](https://github.com/wenet-e2e/wenet/blob/a92952827c/examples/aishell/s0/conf/train_conformer.yaml)
 ```bash
-# python3.7 torch1.10
+# 运行环境：python3.7 torch1.10 1个GPU 16CPU 内存32G
 root_dir="examples/mix_data/exp/conformer/2022-04-07-05-37-18"
 config_path="${root_dir}/train.yaml"
 cmvn_file="${root_dir}/global_cmvn"

@@ -22,11 +22,8 @@
 - 标点符号
     - [RapidPunc](https://github.com/RapidAI/RapidPunc)
 
-#### 📆TODO
-- [x] RapidASR整理（语音识别）
-- [x] RapidPunc整理（对ASR结果添加标点）
-- [ ] RapidVad（对音频进行检测和分割）
-
+#### 📆TODO以及任务认领
+- 参见这里：[link](https://github.com/RapidAI/RapidASR/issues/15)
 
 #### 🎨整体框架
 ```mermaid

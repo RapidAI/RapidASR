@@ -52,17 +52,18 @@
 3. 运行demo
     ```python
     from rapid_paraformer import RapidParaformer
+    ```
 
 
     config_path = 'resources/config.yaml'
     paraformer = RapidParaformer(config_path)
-
+    
     # 输入：支持Union[str, np.ndarray, List[str]] 三种方式传入
     # 输出： List[asr_res]
     wav_path = [
         'test_wavs/0478_00017.wav',
     ]
-
+    
     result = paraformer(wav_path)
     print(result)
     ```
@@ -71,3 +72,11 @@
    ['呃说不配合就不配合的好以上的话呢我们摘取八九十三条因为这三条的话呢比较典型啊一些数字比较明确尤其是时间那么我们要投资者就是了解这一点啊不要轻信这个市场可以快速回来啊这些配市公司啊后期又利好了可
    以快速快速攻能包括像前一段时间啊有些媒体在二三月份的时候']
    ```
+
+更新内容：
+
+1、更新了VAD和Punc 
+
+把导出来的model.onnx放到对应的文件夹就可以了。
+
+demo里面组合了使用方式 ，目前来看VAD的效果不太好，所以我这里直接是把音频手动按固定的30s切了，然后再去识别组合。

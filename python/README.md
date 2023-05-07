@@ -5,7 +5,9 @@
     <a href=""><img src="https://img.shields.io/badge/OS-Linux%2C%20Win%2C%20Mac-pink.svg"></a>
 </p>
 
-- 模型出自阿里达摩院[Paraformer语音识别-中文-通用-16k-离线-large-pytorch](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
+- ASR模型出自阿里达摩院[Paraformer语音识别-中文-通用-16k-离线-large-pytorch](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
+- VAD模型出自阿里达摩院[FSMN语音端点检测-中文-通用-16k](https://modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary)
+- Punc模型出自阿里达摩院[CT-Transformer标点-中文-通用-pytorch](https://modelscope.cn/models/damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch/summary)
 - 🎉该项目核心代码已经并入[FunASR](https://github.com/alibaba-damo-academy/FunASR)
 - 本仓库仅对模型做了转换，只采用ONNXRuntime推理引擎
 
@@ -77,6 +79,9 @@
 
 1、更新了VAD和Punc 
 
-把导出来的model.onnx放到对应的文件夹就可以了。
+更新内容主要代码都来源于[FunASR](https://github.com/alibaba-damo-academy/FunASR) 
+
+模型导出参考[这里](https://github.com/alibaba-damo-academy/FunASR/tree/main/funasr/export) ，把导出来的model.onnx放到对应的文件夹就可以了。
 
 demo里面组合了使用方式 ，目前来看VAD的效果不太好，所以我这里直接是把音频手动按固定的30s切了，然后再去识别组合。
+

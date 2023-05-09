@@ -6,8 +6,8 @@
 </p>
 
 - ASR模型出自阿里达摩院[Paraformer语音识别-中文-通用-16k-离线-large-pytorch](https://www.modelscope.cn/models/damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch/summary)
-- VAD模型出自阿里达摩院[FSMN语音端点检测-中文-通用-16k](https://modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary)
-- Punc模型出自阿里达摩院[CT-Transformer标点-中文-通用-pytorch](https://modelscope.cn/models/damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch/summary)
+- VAD模型FSMN-VAD出自阿里达摩院[FSMN语音端点检测-中文-通用-16k](https://modelscope.cn/models/damo/speech_fsmn_vad_zh-cn-16k-common-pytorch/summary)
+- Punc模型CT-Transformer出自阿里达摩院[CT-Transformer标点-中文-通用-pytorch](https://modelscope.cn/models/damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch/summary)
 - 🎉该项目核心代码已经并入[FunASR](https://github.com/alibaba-damo-academy/FunASR)
 - 本仓库仅对模型做了转换，只采用ONNXRuntime推理引擎
 

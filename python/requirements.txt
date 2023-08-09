@@ -2,4 +2,4 @@ librosa
 numpy
 onnxruntime
 scipy
-typeguard
+typeguard==2.13.1

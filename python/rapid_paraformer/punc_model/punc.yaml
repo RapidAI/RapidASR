@@ -1,0 +1,19 @@
+punc_list:
+- <unk>
+- _
+- ','
+- 。
+- '?'
+- 、
+
+TokenIDConverter:
+  token_path: punc_model/punc_token_list.pkl
+  unk_symbol: <unk>
+Model:
+  model_path: punc_model/model.onnx
+  use_cuda: false
+  CUDAExecutionProvider:
+      device_id: 0
+      arena_extend_strategy: kNextPowerOfTwo
+      cudnn_conv_algo_search: EXHAUSTIVE
+      do_copy_in_default_stream: true

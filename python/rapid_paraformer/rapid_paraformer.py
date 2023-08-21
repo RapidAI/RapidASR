@@ -1,35 +1,41 @@
 # -*- encoding: utf-8 -*-
 # @Author: SWHL
 # @Contact: liekkaskono@163.com
-import traceback
 from pathlib import Path
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 import librosa
 import numpy as np
 
-from .utils import (CharTokenizer, Hypothesis, ONNXRuntimeError,
-                    OrtInferSession, TokenIDConverter, WavFrontend, get_logger,
-                    read_yaml)
+from .utils import (
+    CharTokenizer,
+    Hypothesis,
+    ONNXRuntimeError,
+    OrtInferSession,
+    TokenIDConverter,
+    WavFrontend,
+    get_logger,
+    read_yaml,
+)
 
 logging = get_logger()
 
 
-class RapidParaformer():
+class RapidParaformer:
     def __init__(self, config_path: Union[str, Path]) -> None:
         if not Path(config_path).exists():
-            raise FileNotFoundError(f'{config_path} does not exist.')
+            raise FileNotFoundError(f"{config_path} does not exist.")
 
         config = read_yaml(config_path)
 
-        self.converter = TokenIDConverter(**config['TokenIDConverter'])
-        self.tokenizer = CharTokenizer(**config['CharTokenizer'])
+        self.converter = TokenIDConverter(**config["TokenIDConverter"])
+        self.tokenizer = CharTokenizer(**config["CharTokenizer"])
         self.frontend = WavFrontend(
-            cmvn_file=config['WavFrontend']['cmvn_file'],
-            **config['WavFrontend']['frontend_conf']
+            cmvn_file=config["WavFrontend"]["cmvn_file"],
+            **config["WavFrontend"]["frontend_conf"],
         )
-        self.ort_infer = OrtInferSession(config['Model'])
-        self.batch_size = config['Model']['batch_size']
+        self.ort_infer = OrtInferSession(config["Model"])
+        self.batch_size = config["Model"]["batch_size"]
 
     def __call__(self, wav_content: Union[str, np.ndarray, List[str]]) -> List:
         waveform_list = self.load_data(wav_content)
@@ -52,8 +58,7 @@ class RapidParaformer():
             asr_res.extend(preds)
         return asr_res
 
-    def load_data(self,
-                  wav_content: Union[str, np.ndarray, List[str]]) -> List:
+    def load_data(self, wav_content: Union[str, np.ndarray, List[str]]) -> List:
         def load_wav(path: str) -> np.ndarray:
             waveform, _ = librosa.load(path, sr=None)
             return waveform[None, ...]
@@ -67,12 +72,11 @@ class RapidParaformer():
         if isinstance(wav_content, list):
             return [load_wav(path) for path in wav_content]
 
-        raise TypeError(
-            f'The type of {wav_content} is not in [str, np.ndarray, list]')
+        raise TypeError(f"The type of {wav_content} is not in [str, np.ndarray, list]")
 
-    def extract_feat(self,
-                     waveform_list: List[np.ndarray]
-                     ) -> Tuple[np.ndarray, np.ndarray]:
+    def extract_feat(
+        self, waveform_list: List[np.ndarray]
+    ) -> Tuple[np.ndarray, np.ndarray]:
         feats, feats_len = [], []
         for waveform in waveform_list:
             speech, _ = self.frontend.fbank(waveform)
@@ -88,24 +92,25 @@ class RapidParaformer():
     def pad_feats(feats: List[np.ndarray], max_feat_len: int) -> np.ndarray:
         def pad_feat(feat: np.ndarray, cur_len: int) -> np.ndarray:
             pad_width = ((0, max_feat_len - cur_len), (0, 0))
-            return np.pad(feat, pad_width, 'constant', constant_values=0)
+            return np.pad(feat, pad_width, "constant", constant_values=0)
 
         feat_res = [pad_feat(feat, feat.shape[0]) for feat in feats]
         feats = np.array(feat_res).astype(np.float32)
         return feats
 
-    def infer(self, feats: np.ndarray,
-              feats_len: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def infer(
+        self, feats: np.ndarray, feats_len: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray]:
         am_scores, token_nums = self.ort_infer([feats, feats_len])
         return am_scores, token_nums
 
     def decode(self, am_scores: np.ndarray, token_nums: int) -> List[str]:
-        return [self.decode_one(am_score, token_num)
-                for am_score, token_num in zip(am_scores, token_nums)]
+        return [
+            self.decode_one(am_score, token_num)
+            for am_score, token_num in zip(am_scores, token_nums)
+        ]
 
-    def decode_one(self,
-                   am_score: np.ndarray,
-                   valid_token_num: int) -> List[str]:
+    def decode_one(self, am_score: np.ndarray, valid_token_num: int) -> List[str]:
         yseq = am_score.argmax(axis=-1)
         score = am_score.max(axis=-1)
         score = np.sum(score, axis=-1)
@@ -125,15 +130,15 @@ class RapidParaformer():
         # Change integer-ids to tokens
         token = self.converter.ids2tokens(token_int)
         text = self.tokenizer.tokens2text(token)
-        return text[:valid_token_num-1]
+        return text[: valid_token_num - 1]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     project_dir = Path(__file__).resolve().parent.parent
-    cfg_path = project_dir / 'resources' / 'config.yaml'
+    cfg_path = project_dir / "resources" / "config.yaml"
     paraformer = RapidParaformer(cfg_path)
 
-    wav_file = '0478_00017.wav'
+    wav_file = "0478_00017.wav"
     for i in range(1000):
         result = paraformer(wav_file)
         print(result)

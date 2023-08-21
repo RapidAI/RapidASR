@@ -21,7 +21,7 @@ WavFrontend:
     dither: 0.0
 
 Model:
-  model_path: resources/models/model.onnx
+  model_path: resources/models/asr_paraformerv2.onnx
   use_cuda: false
   CUDAExecutionProvider:
       device_id: 0

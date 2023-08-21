@@ -4,13 +4,19 @@
 import functools
 import logging
 import pickle
+import warnings
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, NamedTuple, Set, Tuple, Union
 
 import numpy as np
 import yaml
-from onnxruntime import (GraphOptimizationLevel, InferenceSession,
-                         SessionOptions, get_available_providers, get_device)
+from onnxruntime import (
+    GraphOptimizationLevel,
+    InferenceSession,
+    SessionOptions,
+    get_available_providers,
+    get_device,
+)
 from typeguard import check_argument_types
 
 from .kaldifeat import compute_fbank_feats
@@ -20,9 +26,12 @@ root_dir = Path(__file__).resolve().parent
 logger_initialized = {}
 
 
-class TokenIDConverter():
-    def __init__(self, token_path: Union[Path, str],
-                 unk_symbol: str = "<unk>",):
+class TokenIDConverter:
+    def __init__(
+        self,
+        token_path: Union[Path, str],
+        unk_symbol: str = "<unk>",
+    ):
         check_argument_types()
 
         self.token_list = self.load_token(token_path)
@@ -31,23 +40,23 @@ class TokenIDConverter():
     @staticmethod
     def load_token(file_path: Union[Path, str]) -> List:
         if not Path(file_path).exists():
-            raise TokenIDConverterError(f'The {file_path} does not exist.')
+            raise TokenIDConverterError(f"The {file_path} does not exist.")
 
-        with open(str(file_path), 'rb') as f:
+        with open(str(file_path), "rb") as f:
             token_list = pickle.load(f)
 
         if len(token_list) != len(set(token_list)):
-            raise TokenIDConverterError('The Token exists duplicated symbol.')
+            raise TokenIDConverterError("The Token exists duplicated symbol.")
         return token_list
 
     def get_num_vocabulary_size(self) -> int:
         return len(self.token_list)
 
-    def ids2tokens(self,
-                   integers: Union[np.ndarray, Iterable[int]]) -> List[str]:
+    def ids2tokens(self, integers: Union[np.ndarray, Iterable[int]]) -> List[str]:
         if isinstance(integers, np.ndarray) and integers.ndim != 1:
             raise TokenIDConverterError(
-                f"Must be 1 dim ndarray, but got {integers.ndim}")
+                f"Must be 1 dim ndarray, but got {integers.ndim}"
+            )
         return [self.token_list[i] for i in integers]
 
     def tokens2ids(self, tokens: Iterable[str]) -> List[int]:
@@ -60,7 +69,7 @@ class TokenIDConverter():
         return [token2id.get(i, unk_id) for i in tokens]
 
 
-class CharTokenizer():
+class CharTokenizer:
     def __init__(
         self,
         symbol_value: Union[Path, str, Iterable[str]] = None,
@@ -96,7 +105,7 @@ class CharTokenizer():
                 if line.startswith(w):
                     if not self.remove_non_linguistic_symbols:
                         tokens.append(line[: len(w)])
-                    line = line[len(w):]
+                    line = line[len(w) :]
                     break
             else:
                 t = line[0]
@@ -119,23 +128,22 @@ class CharTokenizer():
         )
 
 
-class WavFrontend():
-    """Conventional frontend structure for ASR.
-    """
+class WavFrontend:
+    """Conventional frontend structure for ASR."""
 
     def __init__(
-            self,
-            cmvn_file: str = None,
-            fs: int = 16000,
-            window: str = 'hamming',
-            n_mels: int = 80,
-            frame_length: int = 25,
-            frame_shift: int = 10,
-            filter_length_min: int = -1,
-            filter_length_max: float = -1,
-            lfr_m: int = 1,
-            lfr_n: int = 1,
-            dither: float = 1.0
+        self,
+        cmvn_file: str = None,
+        fs: int = 16000,
+        window: str = "hamming",
+        n_mels: int = 80,
+        frame_length: int = 25,
+        frame_shift: int = 10,
+        filter_length_min: int = -1,
+        filter_length_max: float = -1,
+        lfr_m: int = 1,
+        lfr_n: int = 1,
+        dither: float = 1.0,
     ) -> None:
         check_argument_types()
 
@@ -154,19 +162,20 @@ class WavFrontend():
         if self.cmvn_file:
             self.cmvn = self.load_cmvn()
 
-    def fbank(self,
-              input_content: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def fbank(self, input_content: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         waveform_len = input_content.shape[1]
         waveform = input_content[0][:waveform_len]
         waveform = waveform * (1 << 15)
-        mat = compute_fbank_feats(waveform,
-                                  num_mel_bins=self.n_mels,
-                                  frame_length=self.frame_length,
-                                  frame_shift=self.frame_shift,
-                                  dither=self.dither,
-                                  energy_floor=0.0,
-                                  window_type=self.window,
-                                  sample_frequency=self.fs)
+        mat = compute_fbank_feats(
+            waveform,
+            num_mel_bins=self.n_mels,
+            frame_length=self.frame_length,
+            frame_shift=self.frame_shift,
+            dither=self.dither,
+            energy_floor=0.0,
+            window_type=self.window,
+            sample_frequency=self.fs,
+        )
         feat = mat.astype(np.float32)
         feat_len = np.array(mat.shape[0]).astype(np.int32)
         return feat, feat_len
@@ -193,11 +202,12 @@ class WavFrontend():
         for i in range(T_lfr):
             if lfr_m <= T - i * lfr_n:
                 LFR_inputs.append(
-                    (inputs[i * lfr_n:i * lfr_n + lfr_m]).reshape(1, -1))
+                    (inputs[i * lfr_n : i * lfr_n + lfr_m]).reshape(1, -1)
+                )
             else:
                 # process last LFR frame
                 num_padding = lfr_m - (T - i * lfr_n)
-                frame = inputs[i * lfr_n:].reshape(-1)
+                frame = inputs[i * lfr_n :].reshape(-1)
                 for _ in range(num_padding):
                     frame = np.hstack((frame, inputs[-1]))
 
@@ -215,24 +225,26 @@ class WavFrontend():
         inputs = (inputs + means) * vars
         return inputs
 
-    def load_cmvn(self,) -> np.ndarray:
-        with open(self.cmvn_file, 'r', encoding='utf-8') as f:
+    def load_cmvn(
+        self,
+    ) -> np.ndarray:
+        with open(self.cmvn_file, "r", encoding="utf-8") as f:
             lines = f.readlines()
 
         means_list = []
         vars_list = []
         for i in range(len(lines)):
             line_item = lines[i].split()
-            if line_item[0] == '<AddShift>':
+            if line_item[0] == "<AddShift>":
                 line_item = lines[i + 1].split()
-                if line_item[0] == '<LearnRateCoef>':
-                    add_shift_line = line_item[3:(len(line_item) - 1)]
+                if line_item[0] == "<LearnRateCoef>":
+                    add_shift_line = line_item[3 : (len(line_item) - 1)]
                     means_list = list(add_shift_line)
                     continue
-            elif line_item[0] == '<Rescale>':
+            elif line_item[0] == "<Rescale>":
                 line_item = lines[i + 1].split()
-                if line_item[0] == '<LearnRateCoef>':
-                    rescale_line = line_item[3:(len(line_item) - 1)]
+                if line_item[0] == "<LearnRateCoef>":
+                    rescale_line = line_item[3 : (len(line_item) - 1)]
                     vars_list = list(rescale_line)
                     continue
 
@@ -247,8 +259,8 @@ class Hypothesis(NamedTuple):
 
     yseq: np.ndarray
     score: Union[float, np.ndarray] = 0
-    scores: Dict[str, Union[float, np.ndarray]] = dict()
-    states: Dict[str, Any] = dict()
+    scores: Dict[str, Union[float, np.ndarray]] = {}
+    states: Dict[str, Any] = {}
 
     def asdict(self) -> dict:
         """Convert data to JSON-friendly dict."""
@@ -267,56 +279,64 @@ class ONNXRuntimeError(Exception):
     pass
 
 
-class OrtInferSession():
+class OrtInferSession:
     def __init__(self, config):
         sess_opt = SessionOptions()
         sess_opt.log_severity_level = 4
         sess_opt.enable_cpu_mem_arena = False
         sess_opt.graph_optimization_level = GraphOptimizationLevel.ORT_ENABLE_ALL
 
-        cuda_ep = 'CUDAExecutionProvider'
-        cpu_ep = 'CPUExecutionProvider'
+        cuda_ep = "CUDAExecutionProvider"
+        cpu_ep = "CPUExecutionProvider"
         cpu_provider_options = {
             "arena_extend_strategy": "kSameAsRequested",
         }
 
         EP_list = []
-        if config['use_cuda'] and get_device() == 'GPU' \
-                and cuda_ep in get_available_providers():
+        if (
+            config["use_cuda"]
+            and get_device() == "GPU"
+            and cuda_ep in get_available_providers()
+        ):
             EP_list = [(cuda_ep, config[cuda_ep])]
         EP_list.append((cpu_ep, cpu_provider_options))
 
-        config['model_path'] = config['model_path']
-        self._verify_model(config['model_path'])
-        self.session = InferenceSession(config['model_path'],
-                                        sess_options=sess_opt,
-                                        providers=EP_list)
+        config["model_path"] = config["model_path"]
+        self._verify_model(config["model_path"])
+        self.session = InferenceSession(
+            config["model_path"], sess_options=sess_opt, providers=EP_list
+        )
 
-        if config['use_cuda'] and cuda_ep not in self.session.get_providers():
-            warnings.warn(f'{cuda_ep} is not avaiable for current env, the inference part is automatically shifted to be executed under {cpu_ep}.\n'
-                          'Please ensure the installed onnxruntime-gpu version matches your cuda and cudnn version, '
-                          'you can check their relations from the offical web site: '
-                          'https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html',
-                          RuntimeWarning)
+        if config["use_cuda"] and cuda_ep not in self.session.get_providers():
+            warnings.warn(
+                f"{cuda_ep} is not avaiable for current env, the inference part is automatically shifted to be executed under {cpu_ep}.\n"
+                "Please ensure the installed onnxruntime-gpu version matches your cuda and cudnn version, "
+                "you can check their relations from the offical web site: "
+                "https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html",
+                RuntimeWarning,
+            )
 
-    def __call__(self,
-                 input_content: List[np.ndarray]) -> np.ndarray:
+    def __call__(self, input_content: List[np.ndarray]) -> np.ndarray:
         input_dict = dict(zip(self.get_input_names(), input_content))
         try:
             return self.session.run(None, input_dict)
         except Exception as e:
-            raise ONNXRuntimeError('ONNXRuntime inference failed.') from e
+            raise ONNXRuntimeError("ONNXRuntime inference failed.") from e
 
-    def get_input_names(self, ):
+    def get_input_names(
+        self,
+    ):
         return [v.name for v in self.session.get_inputs()]
 
-    def get_output_names(self,):
+    def get_output_names(
+        self,
+    ):
         return [v.name for v in self.session.get_outputs()]
 
-    def get_character_list(self, key: str = 'character'):
+    def get_character_list(self, key: str = "character"):
         return self.meta_dict[key].splitlines()
 
-    def have_key(self, key: str = 'character') -> bool:
+    def have_key(self, key: str = "character") -> bool:
         self.meta_dict = self.session.get_modelmeta().custom_metadata_map
         if key in self.meta_dict.keys():
             return True
@@ -326,22 +346,22 @@ class OrtInferSession():
     def _verify_model(model_path):
         model_path = Path(model_path)
         if not model_path.exists():
-            raise FileNotFoundError(f'{model_path} does not exists.')
+            raise FileNotFoundError(f"{model_path} does not exists.")
         if not model_path.is_file():
-            raise FileExistsError(f'{model_path} is not a file.')
+            raise FileExistsError(f"{model_path} is not a file.")
 
 
 def read_yaml(yaml_path: Union[str, Path]) -> Dict:
     if not Path(yaml_path).exists():
-        raise FileExistsError(f'The {yaml_path} does not exist.')
+        raise FileExistsError(f"The {yaml_path} does not exist.")
 
-    with open(str(yaml_path), 'rb') as f:
+    with open(str(yaml_path), "rb") as f:
         data = yaml.load(f, Loader=yaml.Loader)
     return data
 
 
 @functools.lru_cache()
-def get_logger(name='rapdi_paraformer'):
+def get_logger(name="rapdi_paraformer"):
     """Initialize and get a logger by name.
     If the logger has not been initialized, this method will initialize the
     logger by adding one or two handlers, otherwise the initialized logger will
@@ -361,8 +381,8 @@ def get_logger(name='rapdi_paraformer'):
             return logger
 
     formatter = logging.Formatter(
-        '[%(asctime)s] %(name)s %(levelname)s: %(message)s',
-        datefmt="%Y/%m/%d %H:%M:%S")
+        "[%(asctime)s] %(name)s %(levelname)s: %(message)s", datefmt="%Y/%m/%d %H:%M:%S"
+    )
 
     sh = logging.StreamHandler()
     sh.setFormatter(formatter)

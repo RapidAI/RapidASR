@@ -1,6 +1,5 @@
 *.onnx
-
-*.pth
+*.json
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
@@ -21,6 +20,8 @@ dist/
 downloads/
 eggs/
 .eggs/
+lib/
+lib64/
 parts/
 sdist/
 var/
@@ -138,6 +139,7 @@ dmypy.json
 .vs
 .vscode
 .idea
+/models
 
 #models
 

@@ -1,0 +1,76 @@
+name: Push rapid_paraformer to pypi
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'python/rapid_paraformer/**'
+      - 'python/docs/doc_whl.md'
+      - 'python/setup.py'
+      - '.github/workflows/gen_whl_to_pypi.yml'
+
+# env:
+#   RESOURCES_URL: https://github.com/RapidAI/RapidLatexOCR/releases/download/v0.0.0/models.zip
+
+jobs:
+  # UnitTesting:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Pull latest code
+  #       uses: actions/checkout@v3
+
+  #     - name: Set up Python 3.7
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.7'
+  #         architecture: 'x64'
+
+  #     - name: Display Python version
+  #       run: python -c "import sys; print(sys.version)"
+
+  #     - name: Download models
+  #       run: |
+  #         wget $RESOURCES_URL
+  #         ZIP_NAME=${RESOURCES_URL##*/}
+  #         DIR_NAME=${ZIP_NAME%.*}
+  #         unzip $ZIP_NAME
+
+  #     - name: Unit testings with rapid_latex_ocr
+  #       run: |
+  #         pip install -r requirements.txt
+  #         pip install pytest
+  #         pytest tests/test*.py
+
+  GenerateWHL_PushPyPi:
+    needs: UnitTesting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+
+      - name: Run setup.py
+        run: |
+          cd python
+          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install wheel get_pypi_latest_version
+          python setup.py bdist_wheel ${{ github.event.head_commit.message }}
+
+      # - name: Publish distribution 📦 to Test PyPI
+      #   uses: pypa/gh-action-pypi-publish@v1.5.0
+      #   with:
+      #     password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      #     repository_url: https://test.pypi.org/legacy/
+      #     packages_dir:  dist/
+
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.5.0
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          packages_dir: python/dist/

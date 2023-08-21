@@ -36,7 +36,9 @@ A([wav]) --RapidVad--> B([各个小段的音频]) --RapidASR--> C([识别的文�
 #### 📣更新日志
 <details>
 <summary>详情</summary>
-
+- 2023-08-21 v2.0.4 update:
+  - 添加whl包支持
+  - 更新文档
 - 2023-02-25
    - 添加C++版本推理，使用onnxruntime引擎，预/后处理代码来自： [FastASR](https://github.com/chenkui164/FastASR)
 - 2023-02-14 v2.0.3 update:

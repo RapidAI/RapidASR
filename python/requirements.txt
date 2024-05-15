@@ -1,5 +1,5 @@
 librosa
 numpy
 onnxruntime
-scipy
 typeguard==2.13.3
+huggingface_hub

@@ -2,12 +2,14 @@ name: Push rapid_paraformer to pypi
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'python/rapid_paraformer/**'
-      - 'python/docs/doc_whl.md'
-      - 'python/setup.py'
-      - '.github/workflows/gen_whl_to_pypi.yml'
+    # branches: [ main ]
+    # paths:
+    #   - 'python/rapid_paraformer/**'
+    #   - 'python/docs/doc_whl.md'
+    #   - 'python/setup.py'
+    #   - '.github/workflows/gen_whl_to_pypi.yml'
+    tags:
+      - v*
 
 # env:
 #   RESOURCES_URL: https://github.com/RapidAI/RapidLatexOCR/releases/download/v0.0.0/models.zip
@@ -59,7 +61,7 @@ jobs:
           pip install -r requirements.txt
           python -m pip install --upgrade pip
           pip install wheel get_pypi_latest_version
-          python setup.py bdist_wheel ${{ github.event.head_commit.message }}
+          python setup.py bdist_wheel ${{ github.ref_name }}
 
       # - name: Publish distribution 📦 to Test PyPI
       #   uses: pypa/gh-action-pypi-publish@v1.5.0

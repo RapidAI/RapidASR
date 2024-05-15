@@ -3,18 +3,15 @@
 # @Contact: liekkaskono@163.com
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 import setuptools
 from get_pypi_latest_version import GetPyPiLatestVersion
 
 
-def read_txt(txt_path: str) -> List:
-    if not isinstance(txt_path, str):
-        txt_path = str(txt_path)
-
+def read_txt(txt_path: Union[Path, str]) -> List[str]:
     with open(txt_path, "r", encoding="utf-8") as f:
-        data = list(map(lambda x: x.rstrip("\n"), f))
+        data = [v.rstrip("\n") for v in f]
     return data
 
 
@@ -36,7 +33,6 @@ except ValueError:
 
 VERSION_NUM = obtainer.version_add_one(latest_version)
 
-# 优先提取commit message中的语义化版本号，如无，则自动加1
 if len(sys.argv) > 2:
     match_str = " ".join(sys.argv[2:])
     matched_versions = obtainer.extract_version(match_str)
@@ -67,8 +63,9 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
-    python_requires=">=3.6,<3.12",
+    python_requires=">=3.6,<3.13",
     entry_points={
         "console_scripts": [f"{MODULE_NAME}={MODULE_NAME}.main:main"],
     },

@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterable, List, NamedTuple, Set, Tuple, Union
 
 import numpy as np
 import yaml
+from huggingface_hub import snapshot_download
 from onnxruntime import (
     GraphOptimizationLevel,
     InferenceSession,
@@ -221,8 +222,8 @@ class WavFrontend:
         """
         frame, dim = inputs.shape
         means = np.tile(self.cmvn[0:1, :dim], (frame, 1))
-        vars = np.tile(self.cmvn[1:2, :dim], (frame, 1))
-        inputs = (inputs + means) * vars
+        vars_np = np.tile(self.cmvn[1:2, :dim], (frame, 1))
+        inputs = (inputs + means) * vars_np
         return inputs
 
     def load_cmvn(
@@ -249,8 +250,8 @@ class WavFrontend:
                     continue
 
         means = np.array(means_list).astype(np.float64)
-        vars = np.array(vars_list).astype(np.float64)
-        cmvn = np.array([means, vars])
+        vars_np = np.array(vars_list).astype(np.float64)
+        cmvn = np.array([means, vars_np])
         return cmvn
 
 
@@ -272,10 +273,6 @@ class Hypothesis(NamedTuple):
 
 
 class TokenIDConverterError(Exception):
-    pass
-
-
-class ONNXRuntimeError(Exception):
     pass
 
 
@@ -351,6 +348,10 @@ class OrtInferSession:
             raise FileExistsError(f"{model_path} is not a file.")
 
 
+class ONNXRuntimeError(Exception):
+    pass
+
+
 def read_yaml(yaml_path: Union[str, Path]) -> Dict:
     if not Path(yaml_path).exists():
         raise FileExistsError(f"The {yaml_path} does not exist.")
@@ -390,3 +391,19 @@ def get_logger(name="rapdi_paraformer"):
     logger_initialized[name] = True
     logger.propagate = False
     return logger
+
+
+def download_hf_model(
+    repo_id: str, save_dir: Union[str, Path], resume_download: bool = True
+) -> str:
+    model_dir = snapshot_download(
+        repo_id=repo_id,
+        local_dir=str(save_dir),
+        local_dir_use_symlinks=False,
+        local_files_only=False,
+        resume_download=resume_download,
+        ignore_patterns=[
+            "*.md",
+        ],
+    )
+    return model_dir
